@@ -64,10 +64,12 @@ export function InvestigationPage() {
           <DetailPanel
             record={selectedRecord}
             allRecords={records}
+            filteredRecords={filteredRecords}
             onPersonClick={(name) => {
               setSelectedPerson(name)
               setSelectedRecord(null)
             }}
+            onRecordSelect={setSelectedRecord}
           />
         </aside>
       </div>

@@ -332,30 +332,83 @@ html, body, #root { height: 100%; }
   margin-bottom: 0.75rem;
 }
 
-.detail-reliability { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; }
+.detail-reliability { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem; }
 
-.detail-linked { margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 0.75rem; }
+/* ── Detail nav ── */
+.detail-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
 
-.detail-linked-title {
+.detail-nav-btn {
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.detail-nav-btn:hover:not(:disabled) { background: #f0f2f5; }
+.detail-nav-btn:disabled { color: #c0c8d0; cursor: default; }
+
+.detail-nav-pos {
+  flex: 1;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ── Detail sections (same person / same location) ── */
+.detail-section {
+  margin-top: 0.85rem;
+  border-top: 1px solid var(--border);
+  padding-top: 0.65rem;
+}
+
+.detail-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   font-size: 0.72rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text-muted);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.45rem;
+}
+
+.detail-section-count {
+  background: #e8edf2;
+  border-radius: 9px;
+  padding: 1px 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
 }
 
 .detail-linked-item {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.4rem;
   align-items: center;
+  width: 100%;
   padding: 0.35rem 0.5rem;
+  border: none;
   border-left: 2px solid #ccc;
   border-radius: 0 4px 4px 0;
   background: #fafafa;
   margin-bottom: 0.3rem;
   font-size: 0.78rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.1s;
+  font-family: inherit;
+  color: var(--text);
 }
+.detail-linked-item:hover { background: #f0f4f8; }
 
 .detail-linked-item--checkin  { border-color: var(--c-checkin); }
 .detail-linked-item--message  { border-color: var(--c-message); }
@@ -363,9 +416,13 @@ html, body, #root { height: 100%; }
 .detail-linked-item--note     { border-color: var(--c-note); }
 .detail-linked-item--tip      { border-color: var(--c-tip); }
 
-.detail-linked-type   { font-size: 0.67rem; text-transform: uppercase; font-weight: 600; color: var(--text-muted); min-width: 52px; }
-.detail-linked-person { flex: 1; font-weight: 500; }
-.detail-linked-time   { color: var(--text-muted); font-size: 0.72rem; }
+.detail-linked-type    { font-size: 0.67rem; text-transform: uppercase; font-weight: 600; color: var(--text-muted); min-width: 52px; }
+.detail-linked-person  { flex: 1; font-weight: 500; }
+.detail-linked-related { font-size: 0.75rem; color: var(--text-muted); }
+.detail-linked-time    { color: var(--text-muted); font-size: 0.72rem; }
+
+/* ── RecordCard date style ── */
+.record-card-date { color: #9aabbc; margin-right: 2px; }
 
 /* ── Status screens ──────────────────────────────────── */
 
