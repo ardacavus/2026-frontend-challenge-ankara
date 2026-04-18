@@ -3,4 +3,40 @@
   flex-direction: column;
   align-items: center;
   padding: 2rem;
+  font-family: sans-serif;
+}
+
+.app.error {
+  color: #c0392b;
+}
+
+.counts {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.count-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f4f6f8;
+  border-radius: 8px;
+  padding: 1.25rem 2rem;
+  min-width: 120px;
+}
+
+.count-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.count-label {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  margin-top: 0.25rem;
+  text-align: center;
 }
