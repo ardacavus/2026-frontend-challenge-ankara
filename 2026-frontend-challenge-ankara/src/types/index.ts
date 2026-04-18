@@ -59,3 +59,12 @@ export interface InvestigationRecord {
   reliability: string | null
   rawData: JotformSubmission
 }
+
+export type LinkConfidence = 'high' | 'possible' | 'weak'
+
+export interface LinkResult {
+  record: InvestigationRecord
+  score: number
+  confidence: LinkConfidence
+  reasons: string[]
+}

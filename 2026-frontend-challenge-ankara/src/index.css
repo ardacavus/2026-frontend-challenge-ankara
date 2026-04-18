@@ -424,6 +424,26 @@ html, body, #root { height: 100%; }
 /* ── RecordCard date style ── */
 .record-card-date { color: #9aabbc; margin-right: 2px; }
 
+/* ── Confidence groups ───────────────────────────────── */
+
+.detail-conf-group { margin-bottom: 0.5rem; }
+
+.detail-conf-label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.35rem;
+  color: var(--text-muted);
+}
+
+.detail-conf-label--high     { color: #c0392b; }
+.detail-conf-label--possible { color: #d4820a; }
+.detail-conf-label--weak     { color: var(--text-muted); }
+
 /* ── Status screens ──────────────────────────────────── */
 
 .status-screen {

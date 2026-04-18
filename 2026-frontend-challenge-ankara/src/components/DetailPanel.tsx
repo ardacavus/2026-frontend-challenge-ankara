@@ -1,4 +1,5 @@
-import type { InvestigationRecord, SourceType } from '../types'
+import type { InvestigationRecord, LinkResult, SourceType } from '../types'
+import { computeLinks, groupByConfidence } from '../utils/linking'
 
 const SOURCE_LABELS: Record<SourceType, string> = {
   checkin: 'Check-in',
@@ -8,28 +9,63 @@ const SOURCE_LABELS: Record<SourceType, string> = {
   tip: 'Anonymous Tip',
 }
 
+const CONFIDENCE_LABEL = {
+  high: 'High confidence',
+  possible: 'Possible match',
+  weak: 'Weak match',
+} as const
+
+const CONFIDENCE_ICON = {
+  high: '🔴',
+  possible: '🟡',
+  weak: '⚪',
+} as const
+
 interface LinkedItemProps {
-  record: InvestigationRecord
+  link: LinkResult
   onSelect: (r: InvestigationRecord) => void
 }
 
-function LinkedItem({ record, onSelect }: LinkedItemProps) {
-  const time = new Date(record.timestamp).toLocaleTimeString('tr-TR', {
+function LinkedItem({ link, onSelect }: LinkedItemProps) {
+  const { record: r, reasons } = link
+  const time = new Date(r.timestamp).toLocaleTimeString('tr-TR', {
     hour: '2-digit',
     minute: '2-digit',
   })
   return (
     <button
-      className={`detail-linked-item detail-linked-item--${record.sourceType}`}
-      onClick={() => onSelect(record)}
+      className={`detail-linked-item detail-linked-item--${r.sourceType}`}
+      onClick={() => onSelect(r)}
+      title={reasons.join(' · ')}
     >
-      <span className="detail-linked-type">{SOURCE_LABELS[record.sourceType]}</span>
-      <span className="detail-linked-person">{record.personName}</span>
-      {record.relatedPersonName && (
-        <span className="detail-linked-related">→ {record.relatedPersonName}</span>
+      <span className="detail-linked-type">{SOURCE_LABELS[r.sourceType]}</span>
+      <span className="detail-linked-person">{r.personName}</span>
+      {r.relatedPersonName && (
+        <span className="detail-linked-related">→ {r.relatedPersonName}</span>
       )}
       <span className="detail-linked-time">{time}</span>
     </button>
+  )
+}
+
+interface ConfidenceGroupProps {
+  confidence: 'high' | 'possible' | 'weak'
+  links: LinkResult[]
+  onSelect: (r: InvestigationRecord) => void
+}
+
+function ConfidenceGroup({ confidence, links, onSelect }: ConfidenceGroupProps) {
+  if (links.length === 0) return null
+  return (
+    <div className="detail-conf-group">
+      <p className={`detail-conf-label detail-conf-label--${confidence}`}>
+        {CONFIDENCE_ICON[confidence]} {CONFIDENCE_LABEL[confidence]}
+        <span className="detail-section-count">{links.length}</span>
+      </p>
+      {links.map((l) => (
+        <LinkedItem key={l.record.id} link={l} onSelect={onSelect} />
+      ))}
+    </div>
   )
 }
 
@@ -56,28 +92,15 @@ export function DetailPanel({
     )
   }
 
-  // Prev / Next within the currently filtered + ordered list
+  // Prev / Next within the filtered list
   const idx = filteredRecords.findIndex((r) => r.id === record.id)
   const prevRecord = idx > 0 ? filteredRecords[idx - 1] : null
   const nextRecord = idx < filteredRecords.length - 1 ? filteredRecords[idx + 1] : null
 
-  // People involved in this record
-  const involvedNames = [record.personName, record.relatedPersonName].filter(Boolean) as string[]
-
-  // Same person — records that share any involved name (from ALL records, for full context)
-  const samePerson = allRecords.filter(
-    (r) =>
-      r.id !== record.id &&
-      (involvedNames.includes(r.personName) || involvedNames.includes(r.relatedPersonName ?? '')),
-  )
-
-  // Same location — records at the same place, not already in samePerson
-  const samePersonIds = new Set(samePerson.map((r) => r.id))
-  const sameLocation = record.location
-    ? allRecords.filter(
-        (r) => r.id !== record.id && r.location === record.location && !samePersonIds.has(r.id),
-      )
-    : []
+  // Linking engine
+  const links = computeLinks(record, allRecords)
+  const grouped = groupByConfidence(links)
+  const totalLinks = links.length
 
   return (
     <div className="detail-panel">
@@ -141,29 +164,16 @@ export function DetailPanel({
         </p>
       )}
 
-      {/* ── Same person ── */}
-      {samePerson.length > 0 && (
+      {/* ── Linked records (scored) ── */}
+      {totalLinks > 0 && (
         <div className="detail-section">
           <h4 className="detail-section-title">
-            Same person
-            <span className="detail-section-count">{samePerson.length}</span>
+            Linked records
+            <span className="detail-section-count">{totalLinks}</span>
           </h4>
-          {samePerson.map((r) => (
-            <LinkedItem key={r.id} record={r} onSelect={onRecordSelect} />
-          ))}
-        </div>
-      )}
-
-      {/* ── Same location ── */}
-      {sameLocation.length > 0 && (
-        <div className="detail-section">
-          <h4 className="detail-section-title">
-            Same location
-            <span className="detail-section-count">{sameLocation.length}</span>
-          </h4>
-          {sameLocation.map((r) => (
-            <LinkedItem key={r.id} record={r} onSelect={onRecordSelect} />
-          ))}
+          <ConfidenceGroup confidence="high"     links={grouped.high}     onSelect={onRecordSelect} />
+          <ConfidenceGroup confidence="possible" links={grouped.possible} onSelect={onRecordSelect} />
+          <ConfidenceGroup confidence="weak"     links={grouped.weak}     onSelect={onRecordSelect} />
         </div>
       )}
 
