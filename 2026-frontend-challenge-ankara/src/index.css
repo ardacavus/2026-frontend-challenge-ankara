@@ -450,6 +450,7 @@ html, body, #root { height: 100%; }
 .view-tab:hover { background: #f0f2f5; color: var(--text); }
 .view-tab--active { background: var(--text); color: #fff; border-color: var(--text); }
 .view-tab--podo.view-tab--active { background: #c0392b; border-color: #c0392b; }
+.view-tab--map.view-tab--active  { background: #16a085; border-color: #16a085; }
 
 .view-tab-count {
   font-size: 0.7rem;
@@ -874,6 +875,60 @@ html, body, #root { height: 100%; }
 .empty-state-icon { font-size: 2rem; margin-bottom: 0.6rem; }
 .empty-state-title { font-size: 0.92rem; font-weight: 600; color: var(--text); margin-bottom: 0.35rem; }
 .empty-state-hint  { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; }
+
+/* ── Map view ────────────────────────────────────────── */
+
+.map-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 400px;
+}
+
+.map-container {
+  flex: 1;
+  min-height: 380px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  z-index: 0;
+}
+
+.map-legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem 0.25rem 0;
+}
+
+.map-legend-sources {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.map-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.map-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.map-legend-note {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
 
 /* ── Hamburger / menu button ─────────────────────────── */
 

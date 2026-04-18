@@ -6,10 +6,11 @@ import { FilterBar } from '../components/FilterBar'
 import { RecordList } from '../components/RecordList'
 import { DetailPanel } from '../components/DetailPanel'
 import { PodoTimeline } from '../components/PodoTimeline'
+import { MapView } from '../components/MapView'
 import { LoadingScreen } from '../components/LoadingScreen'
 import { ErrorScreen } from '../components/ErrorScreen'
 
-type ActiveView = 'records' | 'podo'
+type ActiveView = 'records' | 'podo' | 'map'
 
 export function InvestigationPage() {
   const [activeView, setActiveView] = useState<ActiveView>('records')
@@ -99,17 +100,32 @@ export function InvestigationPage() {
               🔍 Podo Timeline
               <span className="view-tab-count">{podoCount}</span>
             </button>
+            <button
+              className={`view-tab view-tab--map${activeView === 'map' ? ' view-tab--active' : ''}`}
+              onClick={() => setActiveView('map')}
+            >
+              🗺 Map
+              <span className="view-tab-count">{records.length}</span>
+            </button>
           </div>
 
-          {activeView === 'records' ? (
+          {activeView === 'records' && (
             <RecordList
               records={filteredRecords}
               selectedId={selectedRecord?.id ?? null}
               onSelect={setSelectedRecord}
               totalRecords={records.length}
             />
-          ) : (
+          )}
+          {activeView === 'podo' && (
             <PodoTimeline allRecords={records} onRecordSelect={handleRecordSelect} />
+          )}
+          {activeView === 'map' && (
+            <MapView
+              records={filteredRecords}
+              selectedId={selectedRecord?.id ?? null}
+              onRecordSelect={handleRecordSelect}
+            />
           )}
         </main>
 
