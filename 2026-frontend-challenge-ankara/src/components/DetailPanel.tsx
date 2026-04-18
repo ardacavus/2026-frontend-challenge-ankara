@@ -1,5 +1,6 @@
 import type { InvestigationRecord, LinkResult, SourceType } from '../types'
 import { computeLinks, groupByConfidence } from '../utils/linking'
+import { SummaryPanel } from './SummaryPanel'
 
 const SOURCE_LABELS: Record<SourceType, string> = {
   checkin: 'Check-in',
@@ -86,9 +87,11 @@ export function DetailPanel({
 }: DetailPanelProps) {
   if (!record) {
     return (
-      <div className="detail-panel detail-panel--empty">
-        <p>Select a record to view details</p>
-      </div>
+      <SummaryPanel
+        allRecords={allRecords}
+        onPersonClick={onPersonClick}
+        onRecordSelect={onRecordSelect}
+      />
     )
   }
 
