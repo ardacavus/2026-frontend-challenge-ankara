@@ -6,6 +6,8 @@ import { FilterBar } from '../components/FilterBar'
 import { RecordList } from '../components/RecordList'
 import { DetailPanel } from '../components/DetailPanel'
 import { PodoTimeline } from '../components/PodoTimeline'
+import { LoadingScreen } from '../components/LoadingScreen'
+import { ErrorScreen } from '../components/ErrorScreen'
 
 type ActiveView = 'records' | 'podo'
 
@@ -17,6 +19,7 @@ export function InvestigationPage() {
     filteredRecords,
     loading,
     error,
+    retry,
     searchQuery,
     setSearchQuery,
     activeFilters,
@@ -34,14 +37,17 @@ export function InvestigationPage() {
     setSelectedRecord,
   } = useInvestigation()
 
-  if (loading) return <div className="status-screen">Loading investigation data...</div>
-  if (error) return <div className="status-screen status-screen--error">Error: {error}</div>
+  if (loading) return <LoadingScreen />
+  if (error) return <ErrorScreen message={error} onRetry={retry} />
 
   const handleRecordSelect = (r: typeof records[0]) => {
     setSelectedRecord(r)
-    // Switch to records view so detail panel is visible
     setActiveView('records')
   }
+
+  const podoCount = records.filter(
+    (r) => r.personName === 'Podo' || r.relatedPersonName === 'Podo',
+  ).length
 
   return (
     <div className="layout">
@@ -65,7 +71,6 @@ export function InvestigationPage() {
         </aside>
 
         <main className="main-area">
-          {/* Tab bar */}
           <div className="view-tabs">
             <button
               className={`view-tab${activeView === 'records' ? ' view-tab--active' : ''}`}
@@ -79,9 +84,7 @@ export function InvestigationPage() {
               onClick={() => setActiveView('podo')}
             >
               🔍 Podo Timeline
-              <span className="view-tab-count">
-                {records.filter((r) => r.personName === 'Podo' || r.relatedPersonName === 'Podo').length}
-              </span>
+              <span className="view-tab-count">{podoCount}</span>
             </button>
           </div>
 
@@ -90,6 +93,7 @@ export function InvestigationPage() {
               records={filteredRecords}
               selectedId={selectedRecord?.id ?? null}
               onSelect={setSelectedRecord}
+              totalRecords={records.length}
             />
           ) : (
             <PodoTimeline allRecords={records} onRecordSelect={handleRecordSelect} />

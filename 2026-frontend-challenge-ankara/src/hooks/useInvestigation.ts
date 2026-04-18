@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { fetchAllInvestigationData } from '../services'
 import type { InvestigationRecord, SourceType } from '../types'
 
@@ -6,6 +6,8 @@ export function useInvestigation() {
   const [records, setRecords] = useState<InvestigationRecord[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [retryKey, setRetryKey] = useState(0)
+
   const [searchQuery, setSearchQuery] = useState('')
   const [activeFilters, setActiveFilters] = useState<SourceType[]>([])
   const [selectedPerson, setSelectedPerson] = useState<string | null>(null)
@@ -13,11 +15,15 @@ export function useInvestigation() {
   const [selectedRecord, setSelectedRecord] = useState<InvestigationRecord | null>(null)
 
   useEffect(() => {
+    setLoading(true)
+    setError(null)
     fetchAllInvestigationData()
       .then(setRecords)
       .catch((err: unknown) => setError(err instanceof Error ? err.message : 'Unknown error'))
       .finally(() => setLoading(false))
-  }, [])
+  }, [retryKey])
+
+  const retry = useCallback(() => setRetryKey((k) => k + 1), [])
 
   const filteredRecords = useMemo(() => {
     let result = records
@@ -98,6 +104,7 @@ export function useInvestigation() {
     filteredRecords,
     loading,
     error,
+    retry,
     searchQuery,
     setSearchQuery,
     activeFilters,
