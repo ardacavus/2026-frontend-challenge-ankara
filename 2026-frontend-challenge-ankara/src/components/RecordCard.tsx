@@ -22,6 +22,7 @@ export function RecordCard({ record, isSelected, onClick }: RecordCardProps) {
   return (
     <div
       className={`record-card record-card--${record.sourceType}${isSelected ? ' record-card--selected' : ''}`}
+      data-record-id={record.id}
       onClick={onClick}
     >
       <div className="record-card-header">

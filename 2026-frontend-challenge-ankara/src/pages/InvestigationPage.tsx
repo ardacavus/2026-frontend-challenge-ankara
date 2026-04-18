@@ -48,6 +48,12 @@ export function InvestigationPage() {
     setSidebarOpen(false)
   }
 
+  // From map: update detail panel and list highlight without leaving map view
+  const handleMapRecordSelect = (r: typeof records[0]) => {
+    setSelectedRecord(r)
+    setSidebarOpen(false)
+  }
+
   const podoCount = records.filter(
     (r) => r.personName === 'Podo' || r.relatedPersonName === 'Podo',
   ).length
@@ -124,7 +130,7 @@ export function InvestigationPage() {
             <MapView
               records={filteredRecords}
               selectedId={selectedRecord?.id ?? null}
-              onRecordSelect={handleRecordSelect}
+              onRecordSelect={handleMapRecordSelect}
             />
           )}
         </main>

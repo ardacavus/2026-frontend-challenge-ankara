@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import type { InvestigationRecord } from '../types'
 import { RecordCard } from './RecordCard'
 
@@ -9,6 +10,12 @@ interface RecordListProps {
 }
 
 export function RecordList({ records, selectedId, onSelect, totalRecords }: RecordListProps) {
+  useEffect(() => {
+    if (!selectedId) return
+    const el = document.querySelector<HTMLElement>(`[data-record-id="${selectedId}"]`)
+    el?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  }, [selectedId])
+
   if (records.length === 0) {
     const isFiltered = totalRecords > 0
     return (
