@@ -1,26 +1,66 @@
 interface HeaderProps {
   total: number
   filtered: number
+  podoCount?: number
+  mappedCount?: number
   onMenuClick?: () => void
   menuOpen?: boolean
 }
 
-export function Header({ total, filtered, onMenuClick, menuOpen }: HeaderProps) {
+export function Header({
+  total,
+  filtered,
+  podoCount = 0,
+  mappedCount = 0,
+  onMenuClick,
+  menuOpen,
+}: HeaderProps) {
   return (
-    <header className="header">
-      {onMenuClick && (
-        <button
-          className="header-menu-btn"
-          onClick={onMenuClick}
-          aria-label={menuOpen ? 'Close filters' : 'Open filters'}
-        >
-          {menuOpen ? '✕' : '☰'}
-        </button>
-      )}
-      <span className="header-title">Investigation Board</span>
-      <span className="header-count">
-        {filtered === total ? `${total} records` : `${filtered} / ${total} records`}
-      </span>
+    <header className="hero-header">
+      <div className="hero-header-top">
+        <div className="hero-brand">
+          {onMenuClick && (
+            <button
+              className="header-menu-btn"
+              onClick={onMenuClick}
+              aria-label={menuOpen ? 'Close filters' : 'Open filters'}
+            >
+              {menuOpen ? '✕' : '☰'}
+            </button>
+          )}
+          <div className="hero-brand-badge">Jotform Caseboard</div>
+        </div>
+      </div>
+
+      <div className="hero-header-main">
+        <div className="hero-copy">
+          <p className="hero-eyebrow">Investigation Dashboard</p>
+          <h1 className="hero-title">Missing Podo: The Ankara Case</h1>
+          <p className="hero-subtitle">
+            Cross-source investigation workspace built from Jotform submissions.
+            Explore linked records, trace Podo’s last sightings, and identify suspicious patterns.
+          </p>
+        </div>
+
+        <div className="hero-stats">
+          <div className="hero-stat-card">
+            <span className="hero-stat-label">Total Records</span>
+            <strong className="hero-stat-value">{total}</strong>
+          </div>
+          <div className="hero-stat-card">
+            <span className="hero-stat-label">Active Results</span>
+            <strong className="hero-stat-value">{filtered}</strong>
+          </div>
+          <div className="hero-stat-card">
+            <span className="hero-stat-label">Podo Events</span>
+            <strong className="hero-stat-value">{podoCount}</strong>
+          </div>
+          <div className="hero-stat-card">
+            <span className="hero-stat-label">Mapped Locations</span>
+            <strong className="hero-stat-value">{mappedCount}</strong>
+          </div>
+        </div>
+      </div>
     </header>
   )
 }

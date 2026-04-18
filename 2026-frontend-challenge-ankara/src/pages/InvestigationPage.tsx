@@ -48,7 +48,6 @@ export function InvestigationPage() {
     setSidebarOpen(false)
   }
 
-  // From map: update detail panel and list highlight without leaving map view
   const handleMapRecordSelect = (r: typeof records[0]) => {
     setSelectedRecord(r)
     setSidebarOpen(false)
@@ -58,14 +57,19 @@ export function InvestigationPage() {
     (r) => r.personName === 'Podo' || r.relatedPersonName === 'Podo',
   ).length
 
+  const mappedCount = records.filter((r) => r.coordinates).length
+
   return (
     <div className="layout">
       <Header
         total={records.length}
         filtered={filteredRecords.length}
+        podoCount={podoCount}
+        mappedCount={mappedCount}
         onMenuClick={() => setSidebarOpen((o) => !o)}
         menuOpen={sidebarOpen}
       />
+
       <div className="layout-body">
         {sidebarOpen && (
           <div
@@ -73,8 +77,10 @@ export function InvestigationPage() {
             onClick={() => setSidebarOpen(false)}
           />
         )}
+
         <aside className={`left-panel${sidebarOpen ? ' left-panel--open' : ''}`}>
           <SearchBar value={searchQuery} onChange={setSearchQuery} />
+
           <FilterBar
             active={activeFilters}
             onToggle={toggleFilter}
@@ -99,39 +105,61 @@ export function InvestigationPage() {
               All Records
               <span className="view-tab-count">{filteredRecords.length}</span>
             </button>
+
             <button
               className={`view-tab view-tab--podo${activeView === 'podo' ? ' view-tab--active' : ''}`}
               onClick={() => setActiveView('podo')}
             >
-              🔍 Podo Timeline
+              Podo Timeline
               <span className="view-tab-count">{podoCount}</span>
             </button>
+
             <button
               className={`view-tab view-tab--map${activeView === 'map' ? ' view-tab--active' : ''}`}
               onClick={() => setActiveView('map')}
             >
-              🗺 Map
-              <span className="view-tab-count">{records.length}</span>
+              Map View
+              <span className="view-tab-count">{mappedCount}</span>
             </button>
           </div>
 
           {activeView === 'records' && (
-            <RecordList
-              records={filteredRecords}
-              selectedId={selectedRecord?.id ?? null}
-              onSelect={setSelectedRecord}
-              totalRecords={records.length}
-            />
+            <section className="content-shell">
+              <div className="section-heading">
+                <div>
+                  <p className="section-eyebrow">Evidence Feed</p>
+                  <h2 className="section-title">Cross-source records</h2>
+                </div>
+                <span className="section-meta">
+                  {filteredRecords.length === records.length
+                    ? `${records.length} records`
+                    : `${filteredRecords.length} of ${records.length} records`}
+                </span>
+              </div>
+
+              <RecordList
+                records={filteredRecords}
+                selectedId={selectedRecord?.id ?? null}
+                onSelect={setSelectedRecord}
+                totalRecords={records.length}
+              />
+            </section>
           )}
+
           {activeView === 'podo' && (
-            <PodoTimeline allRecords={records} onRecordSelect={handleRecordSelect} />
+            <section className="content-shell">
+              <PodoTimeline allRecords={records} onRecordSelect={handleRecordSelect} />
+            </section>
           )}
+
           {activeView === 'map' && (
-            <MapView
-              records={filteredRecords}
-              selectedId={selectedRecord?.id ?? null}
-              onRecordSelect={handleMapRecordSelect}
-            />
+            <section className="content-shell">
+              <MapView
+                records={filteredRecords}
+                selectedId={selectedRecord?.id ?? null}
+                onRecordSelect={handleMapRecordSelect}
+              />
+            </section>
           )}
         </main>
 
