@@ -424,6 +424,169 @@ html, body, #root { height: 100%; }
 /* ── RecordCard date style ── */
 .record-card-date { color: #9aabbc; margin-right: 2px; }
 
+/* ── View tabs ───────────────────────────────────────── */
+
+.view-tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.85rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.6rem;
+}
+
+.view-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s;
+}
+.view-tab:hover { background: #f0f2f5; color: var(--text); }
+.view-tab--active { background: var(--text); color: #fff; border-color: var(--text); }
+.view-tab--podo.view-tab--active { background: #c0392b; border-color: #c0392b; }
+
+.view-tab-count {
+  font-size: 0.7rem;
+  background: rgba(255,255,255,.2);
+  border-radius: 9px;
+  padding: 1px 5px;
+  font-weight: 600;
+}
+.view-tab:not(.view-tab--active) .view-tab-count {
+  background: #e8edf2;
+  color: var(--text-muted);
+}
+
+/* ── Podo Timeline ───────────────────────────────────── */
+
+.podo-timeline { padding-bottom: 2rem; }
+
+.podo-timeline-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.podo-timeline-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #c0392b;
+  margin: 0;
+}
+
+.podo-timeline-count {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.podo-timeline-list { display: flex; flex-direction: column; }
+
+.podo-timeline-entry-wrapper { display: flex; flex-direction: column; }
+
+.podo-timeline-gap {
+  align-self: flex-start;
+  margin-left: 10px;
+  padding: 2px 0 2px 22px;
+  font-size: 0.7rem;
+  color: #a0aec0;
+  font-style: italic;
+  border-left: 2px dashed #dde1e7;
+}
+
+.podo-timeline-entry {
+  display: flex;
+  gap: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  color: var(--text);
+  width: 100%;
+}
+
+/* Track (dot + vertical line) */
+.podo-entry-track {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 22px;
+  flex-shrink: 0;
+  padding-top: 3px;
+}
+
+.podo-entry-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  background: var(--surface);
+  flex-shrink: 0;
+  transition: transform 0.1s;
+}
+.podo-timeline-entry:hover .podo-entry-dot { transform: scale(1.3); }
+
+.podo-entry-dot--checkin  { border-color: var(--c-checkin); }
+.podo-entry-dot--message  { border-color: var(--c-message); }
+.podo-entry-dot--sighting { border-color: var(--c-sighting); }
+.podo-entry-dot--note     { border-color: var(--c-note); }
+.podo-entry-dot--tip      { border-color: var(--c-tip); }
+
+.podo-entry-line {
+  width: 2px;
+  flex: 1;
+  min-height: 12px;
+  background: #dde1e7;
+  margin-top: 3px;
+}
+
+/* Entry body */
+.podo-entry-body {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 6px;
+  margin-left: 6px;
+  transition: box-shadow 0.12s;
+}
+.podo-timeline-entry:hover .podo-entry-body { box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+
+.podo-entry-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.3rem;
+}
+
+.podo-entry-time { font-size: 0.75rem; color: var(--text-muted); }
+
+.podo-entry-who { font-size: 0.9rem; margin-bottom: 0.2rem; }
+.podo-entry-with { color: var(--text-muted); }
+.podo-entry-role { font-size: 0.78rem; color: #a0aec0; }
+.podo-entry-solo { color: #a0aec0; font-style: italic; font-size: 0.85rem; }
+
+.podo-entry-location { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.2rem; }
+
+.podo-entry-content {
+  font-size: 0.8rem;
+  color: #4a5568;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 /* ── Confidence groups ───────────────────────────────── */
 
 .detail-conf-group { margin-bottom: 0.5rem; }
