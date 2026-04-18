@@ -1,4 +1,5 @@
 import type { InvestigationRecord, LinkResult, LinkConfidence } from '../types'
+import { involvedNames, minutesBetween } from './helpers'
 
 // ── Scoring weights ────────────────────────────────────
 const W = {
@@ -19,11 +20,6 @@ const THRESHOLD: Record<LinkConfidence, number> = {
 
 // ── Helpers ────────────────────────────────────────────
 
-function involvedNames(r: InvestigationRecord): string[] {
-  // personName is already normalized via transformers; filter nulls
-  return [r.personName, r.relatedPersonName].filter((n): n is string => Boolean(n))
-}
-
 function hasExactOverlap(namesA: string[], namesB: string[]): string[] {
   return namesA.filter((n) => namesB.includes(n))
 }
@@ -38,10 +34,6 @@ function hasSimilarName(namesA: string[], namesB: string[]): boolean {
       return la.slice(0, 4) === lb.slice(0, 4) && la.slice(0, 4).length >= 4
     }),
   )
-}
-
-function minutesBetween(a: string, b: string): number {
-  return Math.abs(new Date(a).getTime() - new Date(b).getTime()) / 60_000
 }
 
 function toConfidence(score: number): LinkConfidence | null {

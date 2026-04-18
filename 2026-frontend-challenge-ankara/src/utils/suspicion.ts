@@ -1,4 +1,5 @@
 import type { InvestigationRecord } from '../types'
+import { involvedNames, minutesBetween } from './helpers'
 
 export type SuspicionLevel = 'very' | 'suspicious' | 'watched'
 
@@ -26,14 +27,6 @@ export interface InvestigationSummary {
 }
 
 // ── Helpers ────────────────────────────────────────────
-
-function involvedNames(r: InvestigationRecord): string[] {
-  return [r.personName, r.relatedPersonName].filter((n): n is string => Boolean(n))
-}
-
-function minutesBetween(a: string, b: string): number {
-  return Math.abs(new Date(a).getTime() - new Date(b).getTime()) / 60_000
-}
 
 // Detect if a person appears in 3+ different locations within any 2-hour window
 function mobilityBonus(records: InvestigationRecord[], name: string): number {
