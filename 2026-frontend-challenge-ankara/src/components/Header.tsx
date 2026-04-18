@@ -29,7 +29,7 @@ export function Header({
               {menuOpen ? '✕' : '☰'}
             </button>
           )}
-          <span className="hero-brand-badge">Jotform Caseboard</span>
+          <span className="hero-brand-badge">🐾 Jotform Caseboard</span>
         </div>
       </div>
 

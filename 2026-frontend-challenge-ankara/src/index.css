@@ -5,12 +5,12 @@
   --c-note: #9b51e0;
   --c-tip: #eb5757;
 
-  --bg: #f5f7fb;
-  --bg-soft: #eef3fb;
-  --surface: #ffffff;
-  --surface-muted: #f9fbff;
-  --border: #dde6f2;
-  --border-strong: #cbd8ea;
+  --bg: #f5f0eb;
+  --bg-soft: #ede8e2;
+  --surface: #faf7f4;
+  --surface-muted: #f7f3ef;
+  --border: #ddd7d0;
+  --border-strong: #ccc5bc;
   --text: #1f2a37;
   --text-muted: #6b7280;
   --title: #0f172a;
@@ -20,7 +20,7 @@
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 14px;
   color: var(--text);
-  background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+  background: linear-gradient(180deg, #f5f0eb 0%, #ede8e2 100%);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -31,7 +31,7 @@
 body {
   margin: 0;
   color: var(--text);
-  background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+  background: linear-gradient(180deg, #f5f0eb 0%, #ede8e2 100%);
 }
 
 button,
@@ -229,7 +229,7 @@ textarea {
   padding: 0.75rem 0.9rem;
   border: 1px solid var(--border);
   border-radius: 16px;
-  background: #fff;
+  background: var(--surface);
 }
 
 .search-input-icon {
@@ -262,7 +262,7 @@ textarea {
   padding: 1rem;
   border: 1px solid var(--border);
   border-radius: 20px;
-  background: #fff;
+  background: var(--surface);
 }
 
 .filter-shell-header {
@@ -529,7 +529,7 @@ textarea {
 .record-card {
   width: 100%;
   padding: 1rem;
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-left: 4px solid transparent;
   border-radius: 20px;
@@ -737,7 +737,7 @@ textarea {
   padding: 0.9rem;
   border: 1px solid var(--border);
   border-radius: 18px;
-  background: #fff;
+  background: var(--surface);
 }
 
 .summary-stat-label {
@@ -763,7 +763,7 @@ textarea {
   padding: 1rem;
   border: 1px solid var(--border);
   border-radius: 20px;
-  background: #fff;
+  background: var(--surface);
 }
 
 .summary-feature-card {
@@ -844,7 +844,7 @@ textarea {
   padding: 0.85rem;
   border: 1px solid var(--border);
   border-radius: 16px;
-  background: #fff;
+  background: var(--surface);
   cursor: pointer;
   text-align: left;
 }
@@ -928,7 +928,7 @@ textarea {
   padding: 0.85rem;
   border: 1px solid var(--border);
   border-radius: 16px;
-  background: #fff;
+  background: var(--surface);
   text-align: left;
   cursor: pointer;
 }
@@ -988,7 +988,7 @@ textarea {
 
 .detail-nav-btn {
   border: 1px solid var(--border);
-  background: #fff;
+  background: var(--surface);
   color: var(--text);
   border-radius: 14px;
   padding: 0.65rem 0.85rem;
@@ -1014,7 +1014,7 @@ textarea {
   padding: 1rem;
   border: 1px solid var(--border);
   border-radius: 20px;
-  background: #fff;
+  background: var(--surface);
 }
 
 .detail-header-row,
@@ -1178,7 +1178,7 @@ textarea {
   padding: 0.95rem;
   border: 1px solid var(--border);
   border-radius: 16px;
-  background: #fff;
+  background: var(--surface);
   color: #425466;
   line-height: 1.7;
   font-size: 0.86rem;
@@ -1212,7 +1212,7 @@ textarea {
   padding: 0.85rem;
   border: 1px solid var(--border);
   border-radius: 16px;
-  background: #fff;
+  background: var(--surface);
   text-align: left;
   cursor: pointer;
 }
@@ -1265,7 +1265,7 @@ textarea {
   padding: 1rem;
   border: 1px solid var(--border);
   border-radius: 18px;
-  background: #fff;
+  background: var(--surface);
   text-align: left;
   cursor: pointer;
 }
@@ -1367,7 +1367,7 @@ textarea {
   padding: 0.9rem 1rem;
   border: 1px solid var(--border);
   border-radius: 18px;
-  background: #fff;
+  background: var(--surface);
 }
 
 .map-legend-sources {
@@ -1662,7 +1662,7 @@ textarea {
   gap: 1rem;
   width: 100%;
   padding: 1rem;
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 20px;
   cursor: pointer;
@@ -2039,7 +2039,7 @@ textarea {
 @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
 
 .verdict-card {
-  background: #fff;
+  background: var(--surface);
   border-radius: 28px;
   padding: 2.5rem 2rem;
   max-width: 480px;
@@ -2132,7 +2132,7 @@ textarea {
 
 .verdict-evidence {
   text-align: left;
-  background: #fafafa;
+  background: var(--surface-muted);
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 1rem 1.25rem;
