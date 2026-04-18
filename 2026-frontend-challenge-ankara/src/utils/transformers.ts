@@ -1,4 +1,5 @@
 import type { JotformSubmission, InvestigationRecord, Coordinates } from '../types'
+import { normalizeName, normalizeLocation, parseTimestamp } from './normalize'
 
 function ans(submission: JotformSubmission, fieldName: string): string {
   const entry = Object.values(submission.answers).find((a) => a.name === fieldName)
@@ -15,69 +16,69 @@ function parseCoordinates(raw: string): Coordinates | null {
   return { lat, lng }
 }
 
-// Converts "DD-MM-YYYY HH:MM" to ISO string; falls back to raw value
-function parseTimestamp(raw: string): string {
-  const match = raw.match(/^(\d{2})-(\d{2})-(\d{4})\s+(\d{2}):(\d{2})/)
-  if (!match) return raw
-  const [, day, month, year, hour, min] = match
-  return new Date(`${year}-${month}-${day}T${hour}:${min}:00`).toISOString()
+function loc(sub: JotformSubmission): string | null {
+  const raw = ans(sub, 'location')
+  return raw ? normalizeLocation(raw) : null
 }
 
 export function transformCheckin(sub: JotformSubmission): InvestigationRecord {
   return {
     id: sub.id,
     sourceType: 'checkin',
-    personName: ans(sub, 'personName'),
+    personName: normalizeName(ans(sub, 'personName')),
     relatedPersonName: null,
-    location: ans(sub, 'location') || null,
+    location: loc(sub),
     coordinates: parseCoordinates(ans(sub, 'coordinates')),
     timestamp: parseTimestamp(ans(sub, 'timestamp')),
-    content: ans(sub, 'note'),
+    content: ans(sub, 'note').trim(),
     reliability: null,
     rawData: sub,
   }
 }
 
 export function transformMessage(sub: JotformSubmission): InvestigationRecord {
+  const related = ans(sub, 'recipientName')
   return {
     id: sub.id,
     sourceType: 'message',
-    personName: ans(sub, 'senderName'),
-    relatedPersonName: ans(sub, 'recipientName') || null,
-    location: ans(sub, 'location') || null,
+    personName: normalizeName(ans(sub, 'senderName')),
+    relatedPersonName: related ? normalizeName(related) : null,
+    location: loc(sub),
     coordinates: parseCoordinates(ans(sub, 'coordinates')),
     timestamp: parseTimestamp(ans(sub, 'timestamp')),
-    content: ans(sub, 'text'),
+    content: ans(sub, 'text').trim(),
     reliability: ans(sub, 'urgency') || null,
     rawData: sub,
   }
 }
 
 export function transformSighting(sub: JotformSubmission): InvestigationRecord {
+  const related = ans(sub, 'seenWith')
   return {
     id: sub.id,
     sourceType: 'sighting',
-    personName: ans(sub, 'personName'),
-    relatedPersonName: ans(sub, 'seenWith') || null,
-    location: ans(sub, 'location') || null,
+    personName: normalizeName(ans(sub, 'personName')),
+    relatedPersonName: related ? normalizeName(related) : null,
+    location: loc(sub),
     coordinates: parseCoordinates(ans(sub, 'coordinates')),
     timestamp: parseTimestamp(ans(sub, 'timestamp')),
-    content: ans(sub, 'note'),
+    content: ans(sub, 'note').trim(),
     reliability: null,
     rawData: sub,
   }
 }
 
 export function transformNote(sub: JotformSubmission): InvestigationRecord {
+  const related = ans(sub, 'mentionedPeople')
   return {
     id: sub.id,
     sourceType: 'note',
-    personName: ans(sub, 'authorName'),
-    relatedPersonName: ans(sub, 'mentionedPeople') || null,
-    location: ans(sub, 'location') || null,
+    personName: normalizeName(ans(sub, 'authorName')),
+    relatedPersonName: related ? normalizeName(related) : null,
+    location: loc(sub),
     coordinates: parseCoordinates(ans(sub, 'coordinates')),
     timestamp: parseTimestamp(ans(sub, 'timestamp')),
-    content: ans(sub, 'note'),
+    content: ans(sub, 'note').trim(),
     reliability: null,
     rawData: sub,
   }
@@ -87,12 +88,12 @@ export function transformTip(sub: JotformSubmission): InvestigationRecord {
   return {
     id: sub.id,
     sourceType: 'tip',
-    personName: ans(sub, 'suspectName'),
+    personName: normalizeName(ans(sub, 'suspectName')),
     relatedPersonName: null,
-    location: ans(sub, 'location') || null,
+    location: loc(sub),
     coordinates: parseCoordinates(ans(sub, 'coordinates')),
     timestamp: parseTimestamp(ans(sub, 'timestamp')),
-    content: ans(sub, 'tip'),
+    content: ans(sub, 'tip').trim(),
     reliability: ans(sub, 'confidence') || null,
     rawData: sub,
   }
