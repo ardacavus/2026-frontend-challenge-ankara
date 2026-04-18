@@ -1,5 +1,12 @@
 import { JOTFORM_API_KEY, JOTFORM_BASE_URL, FORM_IDS } from '../constants'
-import type { JotformResponse, JotformSubmission, InvestigationData } from '../types'
+import type { JotformResponse, JotformSubmission, InvestigationRecord } from '../types'
+import {
+  transformCheckin,
+  transformMessage,
+  transformSighting,
+  transformNote,
+  transformTip,
+} from '../utils/transformers'
 
 async function fetchFormSubmissions(formId: string): Promise<JotformSubmission[]> {
   const url = `${JOTFORM_BASE_URL}/form/${formId}/submissions?apiKey=${JOTFORM_API_KEY}&limit=1000&orderby=created_at`
@@ -30,7 +37,7 @@ export async function fetchTips(): Promise<JotformSubmission[]> {
   return fetchFormSubmissions(FORM_IDS.tips)
 }
 
-export async function fetchAllInvestigationData(): Promise<InvestigationData> {
+export async function fetchAllInvestigationData(): Promise<InvestigationRecord[]> {
   const [checkins, messages, sightings, notes, tips] = await Promise.all([
     fetchCheckins(),
     fetchMessages(),
@@ -38,5 +45,12 @@ export async function fetchAllInvestigationData(): Promise<InvestigationData> {
     fetchNotes(),
     fetchTips(),
   ])
-  return { checkins, messages, sightings, notes, tips }
+
+  return [
+    ...checkins.map(transformCheckin),
+    ...messages.map(transformMessage),
+    ...sightings.map(transformSighting),
+    ...notes.map(transformNote),
+    ...tips.map(transformTip),
+  ].sort((a, b) => a.timestamp.localeCompare(b.timestamp))
 }

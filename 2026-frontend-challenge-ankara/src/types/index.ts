@@ -39,3 +39,23 @@ export interface InvestigationData {
   notes: JotformSubmission[]
   tips: JotformSubmission[]
 }
+
+export type SourceType = 'checkin' | 'message' | 'sighting' | 'note' | 'tip'
+
+export interface Coordinates {
+  lat: number
+  lng: number
+}
+
+export interface InvestigationRecord {
+  id: string
+  sourceType: SourceType
+  personName: string
+  relatedPersonName: string | null
+  location: string | null
+  coordinates: Coordinates | null
+  timestamp: string
+  content: string
+  reliability: string | null
+  rawData: JotformSubmission
+}
