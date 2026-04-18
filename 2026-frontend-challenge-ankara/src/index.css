@@ -50,6 +50,7 @@ textarea {
 .layout-body {
   display: grid;
   grid-template-columns: 320px minmax(0, 1fr) 380px;
+  align-items: start;
   gap: 1rem;
   padding: 1rem 1rem 1.25rem;
   min-height: 0;
@@ -166,6 +167,9 @@ textarea {
 .main-area,
 .right-panel {
   min-height: 0;
+}
+
+.main-area {
   overflow-y: auto;
 }
 

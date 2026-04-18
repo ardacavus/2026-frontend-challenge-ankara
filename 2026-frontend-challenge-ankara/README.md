@@ -1,42 +1,43 @@
-# Missing Podo: The Ankara Case
+# 🐾 Missing Podo: The Ankara Case
 
-An investigation dashboard built for the **Jotform 2026 Frontend Challenge**. The app aggregates cross-source Jotform submissions — check-ins, messages, sightings, personal notes, and anonymous tips — into a single, interactive investigation workspace to help users trace Podo's last known movements and surface suspicious patterns.
+> **Jotform 2026 Frontend Hackathon** — Investigation Dashboard
+
+Podo kayıp. Ankara'nın dört bir yanından gelen Jotform formları aracılığıyla elde edilen check-in kayıtları, mesajlar, görüntülenme raporları, kişisel notlar ve anonim ihbarlar tek bir araştırma panosunda bir araya getirildi. Amaç: Podo'nun son hareketlerini izlemek, şüpheli kalıpları yüzeye çıkarmak ve davayı kapatmak.
 
 ---
 
-## Running the project
+## Kurulum ve Çalıştırma
 
-**Prerequisites:** Node.js 18 or higher
+**Gereksinim:** Node.js 18 veya üzeri
 
 ```bash
-# 1. Install dependencies
+# 1. Bağımlılıkları yükle
 npm install
 
-# 2. Create the environment file
+# 2. Ortam değişkenleri dosyasını oluştur
 cp .env.example .env
-# (or create .env manually — see Environment Variables below)
 
-# 3. Start the development server
+# 3. Geliştirme sunucusunu başlat
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+Tarayıcıda `http://localhost:5173` adresini aç.
 
-### Build for production
+### Production Build
 
 ```bash
 npm run build
-npm run preview   # serve the built output locally
+npm run preview
 ```
 
 ---
 
-## Environment Variables
+## Ortam Değişkenleri
 
-Create a `.env` file in the project root:
+Proje kökünde bir `.env` dosyası oluştur:
 
 ```env
-VITE_JOTFORM_API_KEY=363d4fa1af679bc6a1fce4cff42e0a9d
+VITE_JOTFORM_API_KEY=your_api_key_here
 
 VITE_FORM_CHECKINS=261065067494966
 VITE_FORM_MESSAGES=261065765723966
@@ -47,52 +48,74 @@ VITE_FORM_TIPS=261065875889981
 
 ---
 
-## Features
+## Ne Yapıyor?
 
-### Core
-| Feature | Details |
-|---|---|
-| **Data fetching** | Parallel fetch from 5 Jotform forms via the REST API; unified `InvestigationRecord` model |
-| **Investigation UI** | 3-panel dashboard — filter sidebar, record list, detail/summary panel |
-| **Search & Filter** | Full-text search + source type, person, and location filters with active-filter tags |
-| **Detail view** | Record metadata, linked records by confidence level (high / possible / weak), prev/next navigation |
-| **Record linking** | Weighted scoring engine: exact name match, Podo co-occurrence, same location, time proximity, name similarity |
-| **State handling** | Skeleton loading screen, error card with retry, empty states for all views |
+Uygulama, 5 farklı Jotform formundan gelen verileri paralel olarak çeker ve bunları tek bir `InvestigationRecord` modeline dönüştürür. Tüm bu veriler; arama, filtreleme ve görselleştirme araçlarıyla donatılmış bir araştırma panosunda sunulur.
 
-### Bonus
-| Bonus | Details |
+### Sekmeler
+
+| Sekme | Açıklama |
 |---|---|
-| **Map view** | Leaflet map with static Ankara coordinates; coloured markers per source type; marker ↔ detail panel sync |
-| **Podo Timeline** | Chronological chain of all Podo-linked events with time-gap labels |
-| **Summary panel** | Suspicion ranking with score bars, last-seen-with card, location frequency, high-risk tips |
-| **Person matching** | Alias normalisation (`Kagan` / `Kağan A.` → `Kağan`), Turkish title-case |
-| **Responsive design** | Desktop 3-column / tablet 2-column / mobile slide-over sidebar |
-| **Map + list sync** | Single `selectedRecord` state drives list highlight, map marker pulse, and detail panel simultaneously |
+| **All Records** | Tüm kayıtların listesi. Kayda tıkladığında sağ panelde detaylar ve bağlantılı kayıtlar açılır. |
+| **🔍 Podo Timeline** | Podo'nun adının geçtiği tüm olayların kronolojik zaman çizelgesi. |
+| **🗺 Map** | Ankara'daki konumları Leaflet haritasında gösterir; kayıt ↔ harita işaretçisi senkronizasyonu. |
+| **🔎 Suspects** | Her kişi için hesaplanan şüphe skoru, görünme sayısı, Podo ile birlikte olma sayısı ve ihbar sayısına göre sıralanmış şüpheli listesi. "Accuse" butonuyla dava kapatılabilir. |
+| **🕸 Network** | Kişiler arası ilişkileri dairesel SVG grafiğiyle gösterir. Podo merkezdedir; düğüme hover yapınca bağlantılar öne çıkar, tıklayınca kayıtlar filtrelenir. |
+| **📊 Heatmap** | 24 saatlik × 5 kaynak türü ısı haritası. En yoğun saati ve kaynak bazlı aktivite dağılımını gösterir. |
+
+### Temel Özellikler
+
+- **Arama & Filtreleme** — Tam metin arama + kaynak türü, kişi ve konum filtreleri
+- **Kayıt Bağlantılama** — Ağırlıklı skorlama motoru: isim eşleşmesi, Podo birlikteliği, aynı konum, zaman yakınlığı
+- **Şüphe Skorlaması** — Kişi başına görünme × 5 + Podo birlikteliği × 15 + ihbar × 25 + mobilite + acil mesaj bonusu
+- **Detay Paneli** — Seçili kayıt yok iken özet istatistikler; kayıt seçilince bağlantılı kayıtlar (high / possible / weak güven seviyeleri)
+- **İsim Normalizasyonu** — Türkçe alias eşleştirmesi (`Kağan` / `Kagan A.` → aynı kişi)
+- **Responsive** — Desktop 3 kolon / tablet 2 kolon / mobil slide-over sidebar
 
 ---
 
-## Tech stack
+## Tech Stack
 
 - **React 19** + **TypeScript**
 - **Vite 8**
-- **react-leaflet** + **Leaflet** (map)
-- Plain CSS with CSS custom properties (no UI library)
+- **react-leaflet** + **Leaflet** (harita)
+- Plain CSS — CSS custom properties, UI kütüphanesi yok
 
 ---
 
-## Project structure
+## Proje Yapısı
 
 ```
 src/
-├── components/       # UI components (Header, RecordCard, DetailPanel, MapView, …)
-├── pages/            # InvestigationPage — top-level layout and state wiring
-├── hooks/            # useInvestigation — all data fetching + filter state
-├── services/         # Jotform API fetch functions
+├── components/
+│   ├── Header.tsx          # Hero başlık, istatistik kartları
+│   ├── SearchBar.tsx        # Tam metin arama
+│   ├── FilterBar.tsx        # Kaynak / kişi / konum filtreleri
+│   ├── RecordList.tsx       # Kayıt listesi
+│   ├── RecordCard.tsx       # Tekil kayıt kartı
+│   ├── DetailPanel.tsx      # Kayıt detayı + bağlantılı kayıtlar
+│   ├── SummaryPanel.tsx     # Özet istatistikler (kayıt seçili değilken)
+│   ├── PodoTimeline.tsx     # Podo zaman çizelgesi
+│   ├── MapView.tsx          # Leaflet harita görünümü
+│   ├── SuspectsView.tsx     # Şüpheli sıralaması + verdict modu
+│   ├── ConnectionGraph.tsx  # Kişi ilişki ağı (SVG)
+│   └── ActivityHeatmap.tsx  # Saatlik aktivite ısı haritası
+├── pages/
+│   └── InvestigationPage.tsx  # Ana layout ve state yönetimi
+├── hooks/
+│   └── useInvestigation.ts    # Veri çekme + filtre state'i
+├── services/                  # Jotform API fonksiyonları
 ├── utils/
-│   ├── normalize.ts  # Name aliases, location canonicalisation, timestamp parsing
-│   ├── transformers.ts # Form-specific → InvestigationRecord converters
-│   ├── linking.ts    # Weighted record-linking scoring engine
-│   └── suspicion.ts  # Per-person suspicion scoring and investigation summary
-├── types/            # Shared TypeScript interfaces
-└── constants/        # API key, base URL, form IDs
+│   ├── normalize.ts           # İsim alias'ları, konum normalizasyonu
+│   ├── transformers.ts        # Form verisi → InvestigationRecord
+│   ├── linking.ts             # Kayıt bağlantılama skorlama motoru
+│   └── suspicion.ts           # Şüphe skoru hesaplama
+├── types/                     # TypeScript arayüzleri
+└── constants/                 # API URL, form ID'leri
 ```
+
+---
+
+## Geliştirici
+
+**Arda Çavuş** — Jotform 2026 Frontend Hackathon, Ankara
