@@ -7,10 +7,13 @@ import { RecordList } from '../components/RecordList'
 import { DetailPanel } from '../components/DetailPanel'
 import { PodoTimeline } from '../components/PodoTimeline'
 import { MapView } from '../components/MapView'
+import { SuspectsView } from '../components/SuspectsView'
+import { ConnectionGraph } from '../components/ConnectionGraph'
+import { ActivityHeatmap } from '../components/ActivityHeatmap'
 import { LoadingScreen } from '../components/LoadingScreen'
 import { ErrorScreen } from '../components/ErrorScreen'
 
-type ActiveView = 'records' | 'podo' | 'map'
+type ActiveView = 'records' | 'podo' | 'map' | 'suspects' | 'graph' | 'heatmap'
 
 export function InvestigationPage() {
   const [activeView, setActiveView] = useState<ActiveView>('records')
@@ -57,7 +60,7 @@ export function InvestigationPage() {
     (r) => r.personName === 'Podo' || r.relatedPersonName === 'Podo',
   ).length
 
-  const mappedCount = records.filter((r) => r.coordinates).length
+  const mappedCount = uniqueLocations.length
 
   return (
     <div className="layout">
@@ -69,7 +72,6 @@ export function InvestigationPage() {
         onMenuClick={() => setSidebarOpen((o) => !o)}
         menuOpen={sidebarOpen}
       />
-
       <div className="layout-body">
         {sidebarOpen && (
           <div
@@ -77,10 +79,8 @@ export function InvestigationPage() {
             onClick={() => setSidebarOpen(false)}
           />
         )}
-
         <aside className={`left-panel${sidebarOpen ? ' left-panel--open' : ''}`}>
           <SearchBar value={searchQuery} onChange={setSearchQuery} />
-
           <FilterBar
             active={activeFilters}
             onToggle={toggleFilter}
@@ -105,61 +105,81 @@ export function InvestigationPage() {
               All Records
               <span className="view-tab-count">{filteredRecords.length}</span>
             </button>
-
             <button
               className={`view-tab view-tab--podo${activeView === 'podo' ? ' view-tab--active' : ''}`}
               onClick={() => setActiveView('podo')}
             >
-              Podo Timeline
+              🔍 Podo Timeline
               <span className="view-tab-count">{podoCount}</span>
             </button>
-
             <button
               className={`view-tab view-tab--map${activeView === 'map' ? ' view-tab--active' : ''}`}
               onClick={() => setActiveView('map')}
             >
-              Map View
-              <span className="view-tab-count">{mappedCount}</span>
+              🗺 Map
+              <span className="view-tab-count">{records.length}</span>
+            </button>
+            <button
+              className={`view-tab view-tab--suspects${activeView === 'suspects' ? ' view-tab--active' : ''}`}
+              onClick={() => setActiveView('suspects')}
+            >
+              🔎 Suspects
+              <span className="view-tab-count">{records.length}</span>
+            </button>
+            <button
+              className={`view-tab view-tab--graph${activeView === 'graph' ? ' view-tab--active' : ''}`}
+              onClick={() => setActiveView('graph')}
+            >
+              🕸 Network
+            </button>
+            <button
+              className={`view-tab view-tab--heatmap${activeView === 'heatmap' ? ' view-tab--active' : ''}`}
+              onClick={() => setActiveView('heatmap')}
+            >
+              📊 Heatmap
             </button>
           </div>
 
           {activeView === 'records' && (
-            <section className="content-shell">
-              <div className="section-heading">
-                <div>
-                  <p className="section-eyebrow">Evidence Feed</p>
-                  <h2 className="section-title">Cross-source records</h2>
-                </div>
-                <span className="section-meta">
-                  {filteredRecords.length === records.length
-                    ? `${records.length} records`
-                    : `${filteredRecords.length} of ${records.length} records`}
-                </span>
-              </div>
-
-              <RecordList
-                records={filteredRecords}
-                selectedId={selectedRecord?.id ?? null}
-                onSelect={setSelectedRecord}
-                totalRecords={records.length}
-              />
-            </section>
+            <RecordList
+              records={filteredRecords}
+              selectedId={selectedRecord?.id ?? null}
+              onSelect={setSelectedRecord}
+              totalRecords={records.length}
+            />
           )}
-
           {activeView === 'podo' && (
-            <section className="content-shell">
-              <PodoTimeline allRecords={records} onRecordSelect={handleRecordSelect} />
-            </section>
+            <PodoTimeline allRecords={records} onRecordSelect={handleRecordSelect} />
           )}
-
           {activeView === 'map' && (
-            <section className="content-shell">
-              <MapView
-                records={filteredRecords}
-                selectedId={selectedRecord?.id ?? null}
-                onRecordSelect={handleMapRecordSelect}
-              />
-            </section>
+            <MapView
+              records={filteredRecords}
+              selectedId={selectedRecord?.id ?? null}
+              onRecordSelect={handleMapRecordSelect}
+            />
+          )}
+          {activeView === 'suspects' && (
+            <SuspectsView
+              allRecords={records}
+              onPersonClick={(name) => {
+                setSelectedPerson(name)
+                setSelectedRecord(null)
+                setActiveView('records')
+              }}
+            />
+          )}
+          {activeView === 'graph' && (
+            <ConnectionGraph
+              records={records}
+              onPersonClick={(name) => {
+                setSelectedPerson(name)
+                setSelectedRecord(null)
+                setActiveView('records')
+              }}
+            />
+          )}
+          {activeView === 'heatmap' && (
+            <ActivityHeatmap records={records} />
           )}
         </main>
 

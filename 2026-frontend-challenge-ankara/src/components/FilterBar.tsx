@@ -44,7 +44,7 @@ export function FilterBar({
         </div>
 
         {activeFilterCount > 0 && (
-          <button className="filter-clear-btn" onClick={onClear}>
+          <button className="filter-clear-btn" onClick={onClear} type="button">
             Clear filters
             <span className="filter-clear-count">{activeFilterCount}</span>
           </button>
@@ -77,9 +77,9 @@ export function FilterBar({
             onChange={(e) => onPersonChange(e.target.value || null)}
           >
             <option value="">All people</option>
-            {uniquePersons.map((p) => (
-              <option key={p} value={p}>
-                {p}
+            {uniquePersons.map((person) => (
+              <option key={person} value={person}>
+                {person}
               </option>
             ))}
           </select>
@@ -93,9 +93,9 @@ export function FilterBar({
             onChange={(e) => onLocationChange(e.target.value || null)}
           >
             <option value="">All locations</option>
-            {uniqueLocations.map((l) => (
-              <option key={l} value={l}>
-                {l}
+            {uniqueLocations.map((location) => (
+              <option key={location} value={location}>
+                {location}
               </option>
             ))}
           </select>
@@ -104,7 +104,9 @@ export function FilterBar({
         {(selectedPerson || selectedLocation || active.length > 0) && (
           <div className="active-filter-tags">
             {selectedPerson && <span className="active-filter-tag">Person: {selectedPerson}</span>}
-            {selectedLocation && <span className="active-filter-tag">Location: {selectedLocation}</span>}
+            {selectedLocation && (
+              <span className="active-filter-tag">Location: {selectedLocation}</span>
+            )}
             {active.map((type) => (
               <span key={type} className="active-filter-tag">
                 Source: {type}

@@ -15,13 +15,15 @@ interface RecordCardProps {
 }
 
 export function RecordCard({ record, isSelected, onClick }: RecordCardProps) {
-  const dt = new Date(record.timestamp)
-  const date = dt.toLocaleDateString('tr-TR', {
+  const dateTime = new Date(record.timestamp)
+
+  const date = dateTime.toLocaleDateString('tr-TR', {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
   })
-  const time = dt.toLocaleTimeString('tr-TR', {
+
+  const time = dateTime.toLocaleTimeString('tr-TR', {
     hour: '2-digit',
     minute: '2-digit',
   })
@@ -37,6 +39,7 @@ export function RecordCard({ record, isSelected, onClick }: RecordCardProps) {
         <span className={`record-badge record-badge--${record.sourceType}`}>
           {SOURCE_LABELS[record.sourceType]}
         </span>
+
         <span className="record-card-time">
           <span className="record-card-date">{date}</span>
           <span>{time}</span>
@@ -58,7 +61,9 @@ export function RecordCard({ record, isSelected, onClick }: RecordCardProps) {
         </div>
 
         {record.reliability && (
-          <span className={`record-reliability-badge record-reliability-badge--${record.reliability}`}>
+          <span
+            className={`record-reliability-badge record-reliability-badge--${record.reliability}`}
+          >
             {record.reliability}
           </span>
         )}

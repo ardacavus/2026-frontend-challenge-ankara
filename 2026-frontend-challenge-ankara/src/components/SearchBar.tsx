@@ -9,7 +9,7 @@ export function SearchBar({ value, onChange }: SearchBarProps) {
       <div className="search-panel-header">
         <p className="search-panel-title">Search Records</p>
         <p className="search-panel-subtitle">
-          Find people, locations, sightings, notes, and suspicious mentions.
+          Search people, locations, sightings, notes, and suspicious mentions.
         </p>
       </div>
 

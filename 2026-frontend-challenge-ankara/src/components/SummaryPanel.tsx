@@ -1,11 +1,18 @@
 import { useMemo } from 'react'
 import type { InvestigationRecord } from '../types'
-import { computeInvestigationSummary, type PersonScore, type SuspicionLevel } from '../utils/suspicion'
+import {
+  computeInvestigationSummary,
+  type PersonScore,
+  type SuspicionLevel,
+} from '../utils/suspicion'
 
-const LEVEL_CONFIG: Record<SuspicionLevel, { label: string; icon: string; className: string }> = {
-  very:       { label: 'Very suspicious', icon: '🔴', className: 'susp--very' },
-  suspicious: { label: 'Suspicious',      icon: '🟡', className: 'susp--suspicious' },
-  watched:    { label: 'Watched',          icon: '⚪', className: 'susp--watched' },
+const LEVEL_CONFIG: Record<
+  SuspicionLevel,
+  { label: string; icon: string; className: string }
+> = {
+  very: { label: 'Very suspicious', icon: '🔴', className: 'susp--very' },
+  suspicious: { label: 'Suspicious', icon: '🟡', className: 'susp--suspicious' },
+  watched: { label: 'Watched', icon: '⚪', className: 'susp--watched' },
 }
 
 function ScoreBar({ score, max }: { score: number; max: number }) {
@@ -17,16 +24,33 @@ function ScoreBar({ score, max }: { score: number; max: number }) {
   )
 }
 
-function PersonRow({ p, max, onClick }: { p: PersonScore; max: number; onClick: () => void }) {
-  const cfg = LEVEL_CONFIG[p.level]
+function PersonRow({
+  person,
+  max,
+  onClick,
+}: {
+  person: PersonScore
+  max: number
+  onClick: () => void
+}) {
+  const config = LEVEL_CONFIG[person.level]
+
   return (
-    <button className={`susp-row ${cfg.className}`} onClick={onClick}>
+    <button className={`susp-row ${config.className}`} onClick={onClick} type="button">
       <div className="susp-row-top">
-        <span className="susp-row-name">{p.name}</span>
-        <span className="susp-row-score">{p.score} pts</span>
+        <span className="susp-row-name">{person.name}</span>
+        <span className="susp-row-score">{person.score} pts</span>
       </div>
-      <ScoreBar score={p.score} max={max} />
-      <div className="susp-row-reasons">{p.reasons.join(' · ')}</div>
+
+      <ScoreBar score={person.score} max={max} />
+
+      <div className="susp-row-meta">
+        <span>{person.appearances} appearances</span>
+        <span>{person.podoCo} with Podo</span>
+        <span>{person.tipCount} tips</span>
+      </div>
+
+      <div className="susp-row-reasons">{person.reasons.join(' · ')}</div>
     </button>
   )
 }
@@ -34,63 +58,111 @@ function PersonRow({ p, max, onClick }: { p: PersonScore; max: number; onClick: 
 interface SummaryPanelProps {
   allRecords: InvestigationRecord[]
   onPersonClick: (name: string) => void
-  onRecordSelect: (r: InvestigationRecord) => void
+  onRecordSelect: (record: InvestigationRecord) => void
 }
 
-export function SummaryPanel({ allRecords, onPersonClick, onRecordSelect }: SummaryPanelProps) {
+export function SummaryPanel({
+  allRecords,
+  onPersonClick,
+  onRecordSelect,
+}: SummaryPanelProps) {
   const summary = useMemo(() => computeInvestigationSummary(allRecords), [allRecords])
-  const maxScore = summary.suspicionRanking[0]?.score ?? 1
-  const maxLoc = summary.locationFrequency[0]?.count ?? 1
 
+  const maxScore = summary.suspicionRanking[0]?.score ?? 1
+  const maxLocationCount = summary.locationFrequency[0]?.count ?? 1
   const groups: SuspicionLevel[] = ['very', 'suspicious', 'watched']
 
   return (
     <div className="summary-panel">
-      <h3 className="summary-title">📊 Investigation Summary</h3>
+      <div className="summary-hero">
+        <p className="summary-eyebrow">Investigation Insights</p>
+        <h3 className="summary-title">Case summary</h3>
+        <p className="summary-subtitle">
+          Review suspicious patterns, the latest Podo-linked clues, and location concentration
+          across all Jotform submissions.
+        </p>
+      </div>
 
-      {/* Last seen with Podo */}
+      <div className="summary-stat-grid">
+        <div className="summary-stat-card">
+          <span className="summary-stat-label">Total records</span>
+          <strong className="summary-stat-value">{allRecords.length}</strong>
+        </div>
+
+        <div className="summary-stat-card">
+          <span className="summary-stat-label">Podo-linked events</span>
+          <strong className="summary-stat-value">
+            {
+              allRecords.filter(
+                (record) =>
+                  record.personName === 'Podo' || record.relatedPersonName === 'Podo',
+              ).length
+            }
+          </strong>
+        </div>
+
+        <div className="summary-stat-card">
+          <span className="summary-stat-label">High-risk tips</span>
+          <strong className="summary-stat-value">{summary.highRiskTips.length}</strong>
+        </div>
+
+        <div className="summary-stat-card">
+          <span className="summary-stat-label">Unique locations</span>
+          <strong className="summary-stat-value">{summary.locationFrequency.length}</strong>
+        </div>
+      </div>
+
       {summary.lastSeenWith && (
-        <section className="summary-section">
-          <h4 className="summary-section-title">Last seen with Podo</h4>
-          <div className="summary-last-seen">
+        <section className="summary-section summary-feature-card">
+          <div className="summary-feature-top">
+            <span className="summary-feature-tag">Last seen with Podo</span>
+          </div>
+
+          <div className="summary-feature-main">
             <button
               className="summary-person-link"
               onClick={() => onPersonClick(summary.lastSeenWith!.person)}
+              type="button"
             >
               {summary.lastSeenWith.person}
             </button>
+
             {summary.lastSeenWith.location && (
               <span className="summary-last-loc">@ {summary.lastSeenWith.location}</span>
             )}
-            <span className="summary-last-time">
-              {new Date(summary.lastSeenWith.timestamp).toLocaleTimeString('tr-TR', {
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
-            </span>
           </div>
+
+          <span className="summary-last-time">
+            {new Date(summary.lastSeenWith.timestamp).toLocaleString('tr-TR')}
+          </span>
         </section>
       )}
 
-      {/* Suspicion ranking */}
       {summary.suspicionRanking.length > 0 && (
         <section className="summary-section">
-          <h4 className="summary-section-title">Suspicion ranking</h4>
+          <div className="summary-section-head">
+            <h4 className="summary-section-title">Suspicion ranking</h4>
+            <span className="summary-section-hint">Prioritized leads</span>
+          </div>
+
           {groups.map((level) => {
-            const people = summary.suspicionRanking.filter((p) => p.level === level)
+            const people = summary.suspicionRanking.filter((person) => person.level === level)
             if (people.length === 0) return null
-            const cfg = LEVEL_CONFIG[level]
+
+            const config = LEVEL_CONFIG[level]
+
             return (
               <div key={level} className="susp-group">
-                <p className={`susp-group-label ${cfg.className}`}>
-                  {cfg.icon} {cfg.label}
+                <p className={`susp-group-label ${config.className}`}>
+                  {config.icon} {config.label}
                 </p>
-                {people.map((p) => (
+
+                {people.map((person) => (
                   <PersonRow
-                    key={p.name}
-                    p={p}
+                    key={person.name}
+                    person={person}
                     max={maxScore}
-                    onClick={() => onPersonClick(p.name)}
+                    onClick={() => onPersonClick(person.name)}
                   />
                 ))}
               </div>
@@ -99,20 +171,27 @@ export function SummaryPanel({ allRecords, onPersonClick, onRecordSelect }: Summ
         </section>
       )}
 
-      {/* Location frequency */}
       {summary.locationFrequency.length > 0 && (
         <section className="summary-section">
-          <h4 className="summary-section-title">Location frequency</h4>
+          <div className="summary-section-head">
+            <h4 className="summary-section-title">Location frequency</h4>
+            <span className="summary-section-hint">Potential hotspots</span>
+          </div>
+
           <div className="summary-locations">
             {summary.locationFrequency.map(({ location, count }) => {
-              const pct = Math.min(100, Math.round((count / maxLoc) * 100))
+              const pct = Math.min(100, Math.round((count / maxLocationCount) * 100))
+
               return (
                 <div key={location} className="summary-loc-row">
-                  <span className="summary-loc-name">{location}</span>
+                  <div className="summary-loc-top">
+                    <span className="summary-loc-name">{location}</span>
+                    <span className="summary-loc-count">{count}</span>
+                  </div>
+
                   <div className="summary-loc-bar-track">
                     <div className="summary-loc-bar-fill" style={{ width: `${pct}%` }} />
                   </div>
-                  <span className="summary-loc-count">{count}</span>
                 </div>
               )
             })}
@@ -120,21 +199,36 @@ export function SummaryPanel({ allRecords, onPersonClick, onRecordSelect }: Summ
         </section>
       )}
 
-      {/* High-risk tips */}
       {summary.highRiskTips.length > 0 && (
         <section className="summary-section">
-          <h4 className="summary-section-title">High-risk tips</h4>
-          {summary.highRiskTips.map((r) => (
-            <button key={r.id} className="summary-tip" onClick={() => onRecordSelect(r)}>
-              <div className="summary-tip-top">
-                <span className="summary-tip-suspect">{r.personName}</span>
-                <span className={`summary-tip-conf summary-tip-conf--${r.reliability}`}>
-                  {r.reliability}
-                </span>
-              </div>
-              <div className="summary-tip-content">{r.content}</div>
-            </button>
-          ))}
+          <div className="summary-section-head">
+            <h4 className="summary-section-title">High-risk tips</h4>
+            <span className="summary-section-hint">Actionable anonymous leads</span>
+          </div>
+
+          <div className="summary-tip-list">
+            {summary.highRiskTips.map((record) => (
+              <button
+                key={record.id}
+                className="summary-tip"
+                onClick={() => onRecordSelect(record)}
+                type="button"
+              >
+                <div className="summary-tip-top">
+                  <span className="summary-tip-suspect">{record.personName}</span>
+                  <span className={`summary-tip-conf summary-tip-conf--${record.reliability}`}>
+                    {record.reliability}
+                  </span>
+                </div>
+
+                {record.location && (
+                  <div className="summary-tip-location">📍 {record.location}</div>
+                )}
+
+                <div className="summary-tip-content">{record.content}</div>
+              </button>
+            ))}
+          </div>
         </section>
       )}
     </div>

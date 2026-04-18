@@ -24,11 +24,12 @@ export function Header({
               className="header-menu-btn"
               onClick={onMenuClick}
               aria-label={menuOpen ? 'Close filters' : 'Open filters'}
+              type="button"
             >
               {menuOpen ? '✕' : '☰'}
             </button>
           )}
-          <div className="hero-brand-badge">Jotform Caseboard</div>
+          <span className="hero-brand-badge">Jotform Caseboard</span>
         </div>
       </div>
 
@@ -38,7 +39,8 @@ export function Header({
           <h1 className="hero-title">Missing Podo: The Ankara Case</h1>
           <p className="hero-subtitle">
             Cross-source investigation workspace built from Jotform submissions.
-            Explore linked records, trace Podo’s last sightings, and identify suspicious patterns.
+            Explore linked records, trace Podo&apos;s last sightings, and surface suspicious patterns
+            across check-ins, messages, tips, notes, and sightings.
           </p>
         </div>
 
