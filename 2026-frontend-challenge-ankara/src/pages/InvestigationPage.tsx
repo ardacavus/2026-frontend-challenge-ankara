@@ -13,6 +13,7 @@ type ActiveView = 'records' | 'podo'
 
 export function InvestigationPage() {
   const [activeView, setActiveView] = useState<ActiveView>('records')
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const {
     records,
@@ -43,6 +44,7 @@ export function InvestigationPage() {
   const handleRecordSelect = (r: typeof records[0]) => {
     setSelectedRecord(r)
     setActiveView('records')
+    setSidebarOpen(false)
   }
 
   const podoCount = records.filter(
@@ -51,9 +53,20 @@ export function InvestigationPage() {
 
   return (
     <div className="layout">
-      <Header total={records.length} filtered={filteredRecords.length} />
+      <Header
+        total={records.length}
+        filtered={filteredRecords.length}
+        onMenuClick={() => setSidebarOpen((o) => !o)}
+        menuOpen={sidebarOpen}
+      />
       <div className="layout-body">
-        <aside className="left-panel">
+        {sidebarOpen && (
+          <div
+            className="sidebar-backdrop sidebar-backdrop--visible"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+        <aside className={`left-panel${sidebarOpen ? ' left-panel--open' : ''}`}>
           <SearchBar value={searchQuery} onChange={setSearchQuery} />
           <FilterBar
             active={activeFilters}

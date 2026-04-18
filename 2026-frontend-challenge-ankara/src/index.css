@@ -874,3 +874,127 @@ html, body, #root { height: 100%; }
 .empty-state-icon { font-size: 2rem; margin-bottom: 0.6rem; }
 .empty-state-title { font-size: 0.92rem; font-weight: 600; color: var(--text); margin-bottom: 0.35rem; }
 .empty-state-hint  { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; }
+
+/* ── Hamburger / menu button ─────────────────────────── */
+
+.header-menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 5px;
+  background: rgba(255,255,255,.1);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.1s;
+  flex-shrink: 0;
+}
+.header-menu-btn:hover { background: rgba(255,255,255,.18); }
+
+/* ── Sidebar overlay backdrop ────────────────────────── */
+
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 52px 0 0 0;
+  background: rgba(0,0,0,.4);
+  z-index: 150;
+}
+.sidebar-backdrop--visible { display: block; }
+
+/* ── Scrollbar polish ────────────────────────────────── */
+
+.left-panel::-webkit-scrollbar,
+.main-area::-webkit-scrollbar,
+.right-panel::-webkit-scrollbar { width: 5px; }
+.left-panel::-webkit-scrollbar-track,
+.main-area::-webkit-scrollbar-track,
+.right-panel::-webkit-scrollbar-track { background: transparent; }
+.left-panel::-webkit-scrollbar-thumb,
+.main-area::-webkit-scrollbar-thumb,
+.right-panel::-webkit-scrollbar-thumb { background: #cdd3d9; border-radius: 3px; }
+
+/* ── Focus polish ────────────────────────────────────── */
+:focus-visible { outline: 2px solid var(--c-checkin); outline-offset: 2px; }
+
+/* ── Tablet layout (768px – 1199px) ─────────────────── */
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .layout-body {
+    grid-template-columns: 1fr 280px;
+  }
+
+  .left-panel {
+    position: fixed;
+    top: 52px;
+    left: 0;
+    bottom: 0;
+    width: 270px;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    box-shadow: 3px 0 16px rgba(0,0,0,.15);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+  }
+
+  .left-panel--open { transform: translateX(0); }
+
+  .header-menu-btn { display: flex; }
+}
+
+/* ── Mobile layout (< 768px) ─────────────────────────── */
+
+@media (max-width: 767px) {
+  .layout {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+
+  .layout-body {
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+  }
+
+  .left-panel {
+    position: fixed;
+    top: 52px;
+    left: 0;
+    bottom: 0;
+    width: 82%;
+    max-width: 300px;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    box-shadow: 3px 0 16px rgba(0,0,0,.2);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+  }
+
+  .left-panel--open { transform: translateX(0); }
+
+  .main-area {
+    min-height: 60vh;
+    overflow-y: visible;
+  }
+
+  .right-panel {
+    border-left: none;
+    border-top: 3px solid var(--border);
+    overflow-y: visible;
+  }
+
+  .header-menu-btn { display: flex; }
+
+  /* Tighter card spacing on small screens */
+  .record-card { padding: 0.55rem 0.65rem; }
+  .detail-panel { font-size: 0.85rem; }
+
+  /* Stack view-tabs more compactly */
+  .view-tabs { gap: 0.3rem; }
+  .view-tab  { padding: 0.3rem 0.6rem; font-size: 0.78rem; }
+}
