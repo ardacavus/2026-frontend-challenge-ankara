@@ -1,31 +1,22 @@
 # Jotform Frontend Challenge Project
 
 ## User Information
-Please fill in your information after forking this repository:
 
-- **Name**: [Your Name]
+- **Name**: Arda Çavuş
 
 ## Project Description
-[Add a brief description of your project here]
+
+**Missing Podo: The Ankara Case** — Jotform 2026 Frontend Hackathon için geliştirilmiş bir araştırma panosu. 5 farklı Jotform formundan (check-in, mesaj, görüntülenme, not, ihbar) gelen veriler tek bir interaktif araştırma arayüzünde birleştirildi. Amaç: Podo'nun son hareketlerini izlemek, şüpheli kalıpları yüzeye çıkarmak ve davayı kapatmak.
 
 ## Getting Started
-[Add instructions for setting up and running the project]
 
-# 🚀 Challenge Duyurusu
+```bash
+# 1. Bağımlılıkları yükle
+npm install
 
-## 📅 Tarih ve Saat
-Cumartesi günü başlama saatinden itibaren üç saattir.
+# 2. Ortam değişkenleri dosyasını oluştur
+cp .env.example .env
+# .env dosyasını açıp VITE_JOTFORM_API_KEY değerini gir
 
-## 🎯 Challenge Konsepti
-Bu challenge'da, size özel hazırlanmış bir senaryo üzerine web uygulaması geliştirmeniz istenecektir. Challenge başlangıcında senaryo detayları paylaşılacaktır.Katılımcılar, verilen GitHub reposunu fork ederek kendi geliştirme ortamlarını oluşturacaklardır.
-
-## 📦 GitHub Reposu
-Challenge için kullanılacak repo: https://github.com/cemjotform/2026-frontend-challenge-ankara
-
-## 🛠️ Hazırlık Süreci
-1. GitHub reposunu fork edin
-2. Tercih ettiğiniz framework ile geliştirme ortamınızı hazırlayın
-3. Hazırladığınız setup'ı fork ettiğiniz repoya gönderin
-
-## 💡 Önemli Notlar
-- Katılımcılar kendi tercih ettikleri framework'leri kullanabilirler
+# 3. Geliştirme sunucusunu başlat
+npm run dev
