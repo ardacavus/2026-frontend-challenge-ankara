@@ -111,6 +111,12 @@ html, body, #root { height: 100%; }
 .filter-bar {
   display: flex;
   flex-direction: column;
+  gap: 0.75rem;
+}
+
+.filter-section {
+  display: flex;
+  flex-direction: column;
   gap: 0.35rem;
 }
 
@@ -145,6 +151,47 @@ html, body, #root { height: 100%; }
   border-radius: 9px;
   padding: 1px 6px;
   font-weight: 600;
+}
+
+.filter-select {
+  width: 100%;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.82rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.filter-select:focus { border-color: var(--c-checkin); box-shadow: 0 0 0 2px rgba(52,152,219,.15); }
+
+.filter-select option { background: var(--surface); color: var(--text); }
+
+.filter-clear-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.4rem 0.65rem;
+  background: #fff3f3;
+  border: 1px solid rgba(231,76,60,.35);
+  border-radius: 5px;
+  color: var(--c-tip);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.filter-clear-btn:hover { background: #ffe5e5; }
+
+.filter-clear-count {
+  background: var(--c-tip);
+  color: #fff;
+  font-size: 0.7rem;
+  border-radius: 9px;
+  padding: 1px 6px;
 }
 
 .filter-btn--checkin.filter-btn--active  { border-color: var(--c-checkin);  color: var(--c-checkin);  background: rgba(52,152,219,.07); }

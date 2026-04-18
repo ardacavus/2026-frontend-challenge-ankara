@@ -16,6 +16,14 @@ export function InvestigationPage() {
     activeFilters,
     toggleFilter,
     sourceCounts,
+    selectedPerson,
+    setSelectedPerson,
+    selectedLocation,
+    setSelectedLocation,
+    uniquePersons,
+    uniqueLocations,
+    clearAllFilters,
+    activeFilterCount,
     selectedRecord,
     setSelectedRecord,
   } = useInvestigation()
@@ -23,18 +31,25 @@ export function InvestigationPage() {
   if (loading) return <div className="status-screen">Loading investigation data...</div>
   if (error) return <div className="status-screen status-screen--error">Error: {error}</div>
 
-  const handlePersonClick = (name: string) => {
-    setSearchQuery(name)
-    setSelectedRecord(null)
-  }
-
   return (
     <div className="layout">
       <Header total={records.length} filtered={filteredRecords.length} />
       <div className="layout-body">
         <aside className="left-panel">
           <SearchBar value={searchQuery} onChange={setSearchQuery} />
-          <FilterBar active={activeFilters} onToggle={toggleFilter} counts={sourceCounts} />
+          <FilterBar
+            active={activeFilters}
+            onToggle={toggleFilter}
+            counts={sourceCounts}
+            selectedPerson={selectedPerson}
+            onPersonChange={setSelectedPerson}
+            uniquePersons={uniquePersons}
+            selectedLocation={selectedLocation}
+            onLocationChange={setSelectedLocation}
+            uniqueLocations={uniqueLocations}
+            activeFilterCount={activeFilterCount}
+            onClear={clearAllFilters}
+          />
         </aside>
 
         <main className="main-area">
@@ -49,7 +64,10 @@ export function InvestigationPage() {
           <DetailPanel
             record={selectedRecord}
             allRecords={records}
-            onPersonClick={handlePersonClick}
+            onPersonClick={(name) => {
+              setSelectedPerson(name)
+              setSelectedRecord(null)
+            }}
           />
         </aside>
       </div>
